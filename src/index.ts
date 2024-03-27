@@ -1,27 +1,48 @@
-import * as dotenv from 'dotenv'
+// Construct a schema, using GraphQL schema language
+import { ApolloServer, gql } from 'apollo-server-express'
+import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import express from 'express'
-import cors from 'cors'
-import helmet from 'helmet'
+import * as http from 'http'
 
-dotenv.config()
+void (async () => {
+  /**
+   * Express.js APP configuration
+   */
+  const app = express()
 
-if (process.env.PORT == null) process.exit(1)
+  const httpServer = http.createServer(app)
 
-const PORT: number = parseInt(process.env.PORT, 10)
+  /**
+   * Apollo Server configuration
+   */
+  const typeDefs = gql`
+    type Query {
+      hello: String
+    }
+  `
 
-const app = express()
+  const resolvers = {
+    Query: {
+      hello: () => 'Hello world!'
+    }
+  }
 
-/**
- * Middleware Configuration
- */
-// Helmet helps you secure your Express apps by setting various HTTP headers.
-app.use(helmet())
-// CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
-app.use(cors())
-// Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
-app.use(express.json())
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    csrfPrevention: true,
+    cache: 'bounded',
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      ApolloServerPluginLandingPageLocalDefault({ embed: true })
+    ]
+  })
 
-/**
- * Server Initialization
- */
-app.listen(PORT, () => { console.log(`Listening on port ${PORT}`) })
+  /**
+   * Server kick-off
+   */
+  await apolloServer.start()
+  apolloServer.applyMiddleware({ app })
+  await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve))
+  console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`)
+})()
