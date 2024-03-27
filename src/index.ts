@@ -1,9 +1,7 @@
-import { ApolloServer, gql } from 'apollo-server-express'
-import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import express from 'express'
 import * as http from 'http'
 import helmet from 'helmet'
-import { readFileSync } from 'node:fs'
+import Api from './api/Api'
 
 void (async () => {
   /**
@@ -19,31 +17,17 @@ void (async () => {
   )
   app.use(express.json())
 
+  /**
+   * Apollo Server API configuration
+   */
   const httpServer = http.createServer(app)
 
-  /**
-   * Apollo Server configuration
-   */
-  const typeDefs = gql(readFileSync('./src/api/v1/schema.graphql', 'utf8'))
-  const resolvers = import('./api/v1/resolvers')
-
-  const apolloServer = new ApolloServer({
-    typeDefs,
-    // @ts-expect-error - This is a dynamic import
-    resolvers,
-    csrfPrevention: true,
-    cache: 'bounded',
-    plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      ApolloServerPluginLandingPageLocalDefault({ embed: true })
-    ]
-  })
+  const apiV1: Api = Api.fromVersion(app, httpServer, 'v1')
+  await apiV1.start(app, '/api/v1')
 
   /**
-   * Server kick-off
+   * Start the HTTP server
    */
-  await apolloServer.start()
-  apolloServer.applyMiddleware({ app, path: '/api/v1' })
   await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve))
-  console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`)
+  console.log(`🚀 Server ready at http://localhost:4000${apiV1.apolloServer.graphqlPath}`)
 })()
