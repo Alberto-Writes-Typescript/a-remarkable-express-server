@@ -48,7 +48,7 @@ void (async () => {
    * Server kick-off
    */
   await apolloServer.start()
-  apolloServer.applyMiddleware({ app })
+  apolloServer.applyMiddleware({ app, path: '/api/v1' })
   await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve))
   console.log(`🚀 Server ready at http://localhost:4000${apolloServer.graphqlPath}`)
 })()
