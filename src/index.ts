@@ -1,4 +1,3 @@
-// Construct a schema, using GraphQL schema language
 import { ApolloServer, gql } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import express from 'express'
@@ -26,15 +25,11 @@ void (async () => {
    * Apollo Server configuration
    */
   const typeDefs = gql(readFileSync('./src/api/v1/schema.graphql', 'utf8'))
-
-  const resolvers = {
-    Query: {
-      hello: () => 'Hello world!'
-    }
-  }
+  const resolvers = import('./api/v1/resolvers')
 
   const apolloServer = new ApolloServer({
     typeDefs,
+    // @ts-expect-error - This is a dynamic import
     resolvers,
     csrfPrevention: true,
     cache: 'bounded',
