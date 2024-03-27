@@ -4,6 +4,7 @@ import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDe
 import express from 'express'
 import * as http from 'http'
 import helmet from 'helmet'
+import { readFileSync } from 'node:fs'
 
 void (async () => {
   /**
@@ -24,11 +25,7 @@ void (async () => {
   /**
    * Apollo Server configuration
    */
-  const typeDefs = gql`
-    type Query {
-      hello: String
-    }
-  `
+  const typeDefs = gql(readFileSync('./src/api/v1/schema.graphql', 'utf8'))
 
   const resolvers = {
     Query: {
