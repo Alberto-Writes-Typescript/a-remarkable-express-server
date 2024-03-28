@@ -7,6 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -14,6 +15,45 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+};
+
+export type Device = {
+  __typename?: 'Device';
+  description?: Maybe<DeviceDescription>;
+  id?: Maybe<Scalars['String']['output']>;
+  token?: Maybe<Scalars['String']['output']>;
+};
+
+export enum DeviceDescription {
+  /** Device running in a Chrome browser */
+  BrowserChrome = 'browser_chrome',
+  /** Device running in a MacOS native application */
+  DesktopMacos = 'desktop_macos',
+  /** Device running in a Windows native application */
+  DesktopWindows = 'desktop_windows',
+  /** Device running in an Android device */
+  MobileAndroid = 'mobile_android',
+  /** Device running in an iOS device */
+  MobileIos = 'mobile_ios',
+  /** reMarkable Tablet device */
+  Remarkable = 'remarkable'
+}
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  /**
+   * Given a Device information and a `one-time` code, creates a new Device
+   * with the given information and pairs it to the reMarkable Cloud account
+   * associated with the `one-time` code.
+   */
+  createDevice?: Maybe<Device>;
+};
+
+
+export type MutationCreateDeviceArgs = {
+  description: DeviceDescription;
+  id: Scalars['String']['input'];
+  oneTimeCode: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -93,6 +133,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Device: ResolverTypeWrapper<Device>;
+  DeviceDescription: DeviceDescription;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
@@ -100,8 +143,21 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  Device: Device;
+  Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+};
+
+export type DeviceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Device'] = ResolversParentTypes['Device']> = {
+  description?: Resolver<Maybe<ResolversTypes['DeviceDescription']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createDevice?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'description' | 'id' | 'oneTimeCode'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
@@ -109,6 +165,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type Resolvers<ContextType = any> = {
+  Device?: DeviceResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
 
