@@ -22,7 +22,7 @@ void (async () => {
    */
   const httpServer = http.createServer(app)
 
-  const apiV1: Api = Api.fromVersion(app, httpServer, 'v1')
+  const apiV1: Api = await Api.fromVersion(app, httpServer, 'v1')
   await apiV1.start(app, '/api/v1')
 
   /**

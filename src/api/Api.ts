@@ -19,11 +19,11 @@ import { readFileSync } from 'node:fs'
  * version.
  */
 export default class Api {
-  static fromVersion (app: core.Express, httpServer: http.Server, version: string): Api {
+  static async fromVersion (app: core.Express, httpServer: http.Server, version: string): Promise<Api> {
     const typeDefs = gql(readFileSync(`./src/api/${version}/schema.graphql`, 'utf8'))
-    const resolvers = import(`./${version}/resolvers`)
+    const { resolvers } = await import(`./${version}/resolvers`)
 
-    // @ts-expect-error - This is a dynamic import
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return new this(app, httpServer, typeDefs, resolvers)
   }
 
