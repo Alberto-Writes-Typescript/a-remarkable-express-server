@@ -1,7 +1,59 @@
+enum DeviceDescription {
+	"""
+	Device running in a Chrome browser
+	"""
+	browser_chrome
+	"""
+	Device running in a MacOS native application
+	"""
+	desktop_macos
+	"""
+	Device running in a Windows native application
+	"""
+	desktop_windows
+	"""
+	Device running in an Android device
+	"""
+	mobile_android
+	"""
+	Device running in an iOS device
+	"""
+	mobile_ios
+	"""
+	reMarkable Tablet device
+	"""
+	remarkable
+}
+
+type Device {
+	id: String
+	description: DeviceDescription
+	token: String
+}
+
 type Query {
 	hello: String
 }
 
-schema {
-  query: Query
+type Mutation {
+	"""
+	Given a Device information and a `one-time` code, creates a new Device
+	with the given information and pairs it to the reMarkable Cloud account
+	associated with the `one-time` code.
+	"""
+	createDevice(
+		"""
+		Device Unique UUID v4 Identifier
+		"""
+		id: String!,
+		"""
+		Device description. Indicates the device running environment
+		"""
+		description: DeviceDescription!,
+		"""
+		One-time code required by the reMarkable Cloud API to pair a Device,
+		represented by its UUID and description, to a reMarkable Cloud account.
+		"""
+		oneTimeCode: String!
+	): Device
 }
