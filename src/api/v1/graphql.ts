@@ -17,6 +17,18 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CreateDeviceInput = {
+  /** Device description. Indicates the device running environment */
+  description: DeviceDescription;
+  /** Device Unique UUID v4 Identifier */
+  id: Scalars['String']['input'];
+  /**
+   * One-time code required by the reMarkable Cloud API to pair a Device,
+   * represented by its UUID and description, to a reMarkable Cloud account.
+   */
+  oneTimeCode: Scalars['String']['input'];
+};
+
 export type Device = {
   __typename?: 'Device';
   description?: Maybe<DeviceDescription>;
@@ -51,9 +63,7 @@ export type Mutation = {
 
 
 export type MutationCreateDeviceArgs = {
-  description: DeviceDescription;
-  id: Scalars['String']['input'];
-  oneTimeCode: Scalars['String']['input'];
+  input: CreateDeviceInput;
 };
 
 export type Query = {
@@ -133,6 +143,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateDeviceInput: CreateDeviceInput;
   Device: ResolverTypeWrapper<Device>;
   DeviceDescription: DeviceDescription;
   Mutation: ResolverTypeWrapper<{}>;
@@ -143,6 +154,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  CreateDeviceInput: CreateDeviceInput;
   Device: Device;
   Mutation: {};
   Query: {};
@@ -157,7 +169,7 @@ export type DeviceResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createDevice?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'description' | 'id' | 'oneTimeCode'>>;
+  createDevice?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {

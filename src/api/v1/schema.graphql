@@ -35,25 +35,27 @@ type Query {
 	hello: String
 }
 
+input CreateDeviceInput {
+	"""
+	Device Unique UUID v4 Identifier
+	"""
+	id: String!,
+	"""
+	Device description. Indicates the device running environment
+	"""
+	description: DeviceDescription!,
+	"""
+	One-time code required by the reMarkable Cloud API to pair a Device,
+	represented by its UUID and description, to a reMarkable Cloud account.
+	"""
+	oneTimeCode: String!
+}
+
 type Mutation {
 	"""
 	Given a Device information and a `one-time` code, creates a new Device
 	with the given information and pairs it to the reMarkable Cloud account
 	associated with the `one-time` code.
 	"""
-	createDevice(
-		"""
-		Device Unique UUID v4 Identifier
-		"""
-		id: String!,
-		"""
-		Device description. Indicates the device running environment
-		"""
-		description: DeviceDescription!,
-		"""
-		One-time code required by the reMarkable Cloud API to pair a Device,
-		represented by its UUID and description, to a reMarkable Cloud account.
-		"""
-		oneTimeCode: String!
-	): Device
+	createDevice(input: CreateDeviceInput!): Device
 }
