@@ -3523,6 +3523,15 @@ graphql-tag@^2.11.0:
   dependencies:
     tslib "^2.1.0"
 
+graphql-upload-ts@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/graphql-upload-ts/-/graphql-upload-ts-2.1.2.tgz#5312b56ff75184fc9fabf1d510d11c88f9d61241"
+  integrity sha512-g0mL/55NI1MzRrTczIJw1cruIrqlUm7liQRkuGl6l9s4/j0aSuPkvZ52BS7teI43g6KXE/NeDyUotEAiTyZdHw==
+  dependencies:
+    busboy "^1.6.0"
+    http-errors "^2.0.0"
+    object-path "^0.11.8"
+
 graphql-ws@^5.14.0:
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.16.0.tgz#849efe02f384b4332109329be01d74c345842729"
@@ -3603,7 +3612,7 @@ http-errors@1.8.0:
     statuses ">= 1.5.0 < 2"
     toidentifier "1.0.0"
 
-http-errors@2.0.0, http-errors@~2.0.0:
+http-errors@2.0.0, http-errors@^2.0.0, http-errors@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-2.0.0.tgz#b7774a1486ef73cf7667ac9ae0858c012c57b9d3"
   integrity sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==
@@ -4362,6 +4371,11 @@ object-keys@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
   integrity sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==
+
+object-path@^0.11.8:
+  version "0.11.8"
+  resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.8.tgz#ed002c02bbdd0070b78a27455e8ae01fc14d4742"
+  integrity sha512-YJjNZrlXJFM42wTBn6zgOJVar9KFJvzx6sTWDte8sWZF//cnjl0BxHNpfZx+ZffXX63A9q0b1zsFiBX4g4X5KA==
 
 object.assign@^4.1.5:
   version "4.1.5"

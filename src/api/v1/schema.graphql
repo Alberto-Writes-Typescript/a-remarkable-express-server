@@ -1,3 +1,8 @@
+"""
+File buffer
+"""
+scalar Upload
+
 enum DeviceDescription {
 	"""
 	Device running in a Chrome browser
@@ -51,6 +56,14 @@ type Session {
 	expiresAt: String
 }
 
+"""
+reMarkable Cloud API document
+"""
+type Document {
+	id: String
+	name: String
+}
+
 type Query {
 	hello: String
 }
@@ -71,6 +84,17 @@ input CreateDeviceInput {
 	oneTimeCode: String!
 }
 
+input CreateDocumentInput {
+	"""
+	Document name
+	"""
+	name: String!
+	"""
+	Document file data buffer
+	"""
+	buffer: Upload!
+}
+
 type Mutation {
 	"""
 	Given a Device information and a `one-time` code, creates a new `device`
@@ -79,11 +103,15 @@ type Mutation {
 	"""
 	createDevice(input: CreateDeviceInput!): Device
 	"""
-	Creates new `device` session. Returns a `device` session token that
+	Creates a new `device` session. Returns a `device` session token that
 	must be included in all request `headers` as a `Bearer` token.
 
 	Once expired, the `device` session token must be renewed to continue
 	interacting with the reMarkable Cloud API.
 	"""
 	createSession: Session
+	"""
+	Uploads a new `document` to a reMarkable Cloud account.
+	"""
+	createDocument(input: CreateDocumentInput!): Document
 }

@@ -78,6 +78,49 @@
         "possibleTypes": null
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateDocumentInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "buffer",
+            "description": "Document file data buffer",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Upload",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "Document name",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "Device",
         "description": null,
@@ -173,6 +216,41 @@
       },
       {
         "kind": "OBJECT",
+        "name": "Document",
+        "description": "reMarkable Cloud API document",
+        "fields": [
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "Mutation",
         "description": null,
         "fields": [
@@ -206,8 +284,37 @@
             "deprecationReason": null
           },
           {
+            "name": "createDocument",
+            "description": "Uploads a new `document` to a reMarkable Cloud account.",
+            "args": [
+              {
+                "name": "input",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "CreateDocumentInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Document",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createSession",
-            "description": "Creates new `device` session. Returns a `device` session token that\nmust be included in all request `headers` as a `Bearer` token.\n\nOnce expired, the `device` session token must be renewed to continue\ninteracting with the reMarkable Cloud API.",
+            "description": "Creates a new `device` session. Returns a `device` session token that\nmust be included in all request `headers` as a `Bearer` token.\n\nOnce expired, the `device` session token must be renewed to continue\ninteracting with the reMarkable Cloud API.",
             "args": [],
             "type": {
               "kind": "OBJECT",
@@ -285,6 +392,16 @@
         "kind": "SCALAR",
         "name": "String",
         "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Upload",
+        "description": "The `Upload` scalar type represents a file upload.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
