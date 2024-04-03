@@ -5,9 +5,12 @@ import { type DocumentNode } from 'graphql/language'
 import type * as http from 'http'
 import type { Resolvers } from './v1/graphql'
 import { readFileSync } from 'node:fs'
+import { graphqlUploadExpress } from 'graphql-upload-ts'
+import express from 'express'
 
 interface ApiContext {
   token: string
+  req: Request
 }
 
 /**
@@ -44,6 +47,8 @@ export default class Api {
     this.typeDefs = typeDefs
 
     this.apolloServer = new ApolloServer<ApiContext>({
+      // Required for multi-file uploads
+      allowBatchedHttpRequests: true,
       typeDefs,
       resolvers,
       csrfPrevention: true,
@@ -55,13 +60,20 @@ export default class Api {
       context: async ({ req }: { req: Request }) => {
         // @ts-expect-error TODO: Fix this
         const token = req.headers?.authorization?.split(' ')[1]
-        return { token }
+        return { token, req: req.body }
       }
     })
   }
 
   async start (app: core.Express, path: string): Promise<ApolloServer<ApiContext>> {
     await this.apolloServer.start()
+
+    /**
+     * Apply the middleware for multi-file uploads.
+     * More information in here: https://github.com/meabed/graphql-upload-ts?tab=readme-ov-file#expressjs
+     */
+    app.use(path, graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
+
     this.apolloServer.applyMiddleware({ app, path })
     return this.apolloServer
   }

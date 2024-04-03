@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Upload: { input: any; output: any; }
 };
 
 export type CreateDeviceInput = {
@@ -27,6 +28,13 @@ export type CreateDeviceInput = {
    * represented by its UUID and description, to a reMarkable Cloud account.
    */
   oneTimeCode: Scalars['String']['input'];
+};
+
+export type CreateDocumentInput = {
+  /** Document file data buffer */
+  buffer: Scalars['Upload']['input'];
+  /** Document name */
+  name: Scalars['String']['input'];
 };
 
 export type Device = {
@@ -51,6 +59,13 @@ export enum DeviceDescription {
   Remarkable = 'remarkable'
 }
 
+/** reMarkable Cloud API document */
+export type Document = {
+  __typename?: 'Document';
+  id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /**
@@ -59,8 +74,10 @@ export type Mutation = {
    * associated with the `one-time` code.
    */
   createDevice?: Maybe<Device>;
+  /** Uploads a new `document` to a reMarkable Cloud account. */
+  createDocument?: Maybe<Document>;
   /**
-   * Creates new `device` session. Returns a `device` session token that
+   * Creates a new `device` session. Returns a `device` session token that
    * must be included in all request `headers` as a `Bearer` token.
    *
    * Once expired, the `device` session token must be renewed to continue
@@ -72,6 +89,11 @@ export type Mutation = {
 
 export type MutationCreateDeviceArgs = {
   input: CreateDeviceInput;
+};
+
+
+export type MutationCreateDocumentArgs = {
+  input: CreateDocumentInput;
 };
 
 export type Query = {
@@ -169,23 +191,29 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateDeviceInput: CreateDeviceInput;
+  CreateDocumentInput: CreateDocumentInput;
   Device: ResolverTypeWrapper<Device>;
   DeviceDescription: DeviceDescription;
+  Document: ResolverTypeWrapper<Document>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Session: ResolverTypeWrapper<Session>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateDeviceInput: CreateDeviceInput;
+  CreateDocumentInput: CreateDocumentInput;
   Device: Device;
+  Document: Document;
   Mutation: {};
   Query: {};
   Session: Session;
   String: Scalars['String']['output'];
+  Upload: Scalars['Upload']['output'];
 };
 
 export type DeviceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Device'] = ResolversParentTypes['Device']> = {
@@ -195,8 +223,15 @@ export type DeviceResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DocumentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createDevice?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'input'>>;
+  createDocument?: Resolver<Maybe<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<MutationCreateDocumentArgs, 'input'>>;
   createSession?: Resolver<Maybe<ResolversTypes['Session']>, ParentType, ContextType>;
 };
 
@@ -210,10 +245,16 @@ export type SessionResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
 export type Resolvers<ContextType = any> = {
   Device?: DeviceResolvers<ContextType>;
+  Document?: DocumentResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
 };
 
