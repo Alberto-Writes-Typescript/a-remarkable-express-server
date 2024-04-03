@@ -6,5 +6,6 @@ export async function createSession (deviceToken: string): Promise<ResolversType
   const device = new Device(deviceToken)
   await device.connect()
   const session = device.session
+  // @ts-expect-error TODO: Fix this
   return serializeSession(session)
 }

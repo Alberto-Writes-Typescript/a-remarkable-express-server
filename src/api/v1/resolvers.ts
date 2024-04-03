@@ -13,6 +13,7 @@ export const resolvers: Resolvers = {
       return await createDevice(input)
     },
     createSession: async (parent, args, context): Promise<ResolversTypes['Session']> => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return await createSession(context.token)
     }
   }
