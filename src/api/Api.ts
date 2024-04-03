@@ -6,6 +6,10 @@ import type * as http from 'http'
 import type { Resolvers } from './v1/graphql'
 import { readFileSync } from 'node:fs'
 
+interface ApiContext {
+  token: string
+}
+
 /**
  * Creates an Apollo Server instance of a specific API version.
  *
@@ -28,7 +32,7 @@ export default class Api {
   }
 
   app: core.Express
-  apolloServer: ApolloServer
+  apolloServer: ApolloServer<ApiContext>
   httpServer: http.Server
   typeDefs: DocumentNode
   resolvers: Resolvers
@@ -39,7 +43,7 @@ export default class Api {
     this.resolvers = resolvers
     this.typeDefs = typeDefs
 
-    this.apolloServer = new ApolloServer({
+    this.apolloServer = new ApolloServer<ApiContext>({
       typeDefs,
       resolvers,
       csrfPrevention: true,
@@ -47,11 +51,16 @@ export default class Api {
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer }),
         ApolloServerPluginLandingPageLocalDefault({ embed: true })
-      ]
+      ],
+      context: async ({ req }: { req: Request }) => {
+        // @ts-expect-error TODO: Fix this
+        const token = req.headers?.authorization?.split(' ')[1]
+        return { token }
+      }
     })
   }
 
-  async start (app: core.Express, path: string): Promise<ApolloServer> {
+  async start (app: core.Express, path: string): Promise<ApolloServer<ApiContext>> {
     await this.apolloServer.start()
     this.apolloServer.applyMiddleware({ app, path })
     return this.apolloServer
