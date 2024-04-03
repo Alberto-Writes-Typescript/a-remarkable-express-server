@@ -31,6 +31,26 @@ type Device {
 	token: String
 }
 
+"""
+reMarkable Cloud API device session
+
+A `session` is a temporary JWT token associated to a reMarkable `device`, used for
+device authentication against the reMarkable Cloud API via bearer authentication.
+
+Once you retrieve a `session` token from a `device` this token must be included
+in all request `headers` as a `Bearer` token.
+"""
+type Session {
+	"""
+	reMakable Cloud API JWT device authentication token
+	"""
+	token: String
+	"""
+	Session expiration date in ISO 8601 format
+	"""
+	expiresAt: String
+}
+
 type Query {
 	hello: String
 }
@@ -53,9 +73,17 @@ input CreateDeviceInput {
 
 type Mutation {
 	"""
-	Given a Device information and a `one-time` code, creates a new Device
+	Given a Device information and a `one-time` code, creates a new `device`
 	with the given information and pairs it to the reMarkable Cloud account
 	associated with the `one-time` code.
 	"""
 	createDevice(input: CreateDeviceInput!): Device
+	"""
+	Creates new `device` session. Returns a `device` session token that
+	must be included in all request `headers` as a `Bearer` token.
+
+	Once expired, the `device` session token must be renewed to continue
+	interacting with the reMarkable Cloud API.
+	"""
+	createSession: Session
 }
