@@ -54,11 +54,19 @@ export enum DeviceDescription {
 export type Mutation = {
   __typename?: 'Mutation';
   /**
-   * Given a Device information and a `one-time` code, creates a new Device
+   * Given a Device information and a `one-time` code, creates a new `device`
    * with the given information and pairs it to the reMarkable Cloud account
    * associated with the `one-time` code.
    */
   createDevice?: Maybe<Device>;
+  /**
+   * Creates new `device` session. Returns a `device` session token that
+   * must be included in all request `headers` as a `Bearer` token.
+   *
+   * Once expired, the `device` session token must be renewed to continue
+   * interacting with the reMarkable Cloud API.
+   */
+  createSession?: Maybe<Session>;
 };
 
 
@@ -69,6 +77,23 @@ export type MutationCreateDeviceArgs = {
 export type Query = {
   __typename?: 'Query';
   hello?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * reMarkable Cloud API device session
+ *
+ * A `session` is a temporary JWT token associated to a reMarkable `device`, used for
+ * device authentication against the reMarkable Cloud API via bearer authentication.
+ *
+ * Once you retrieve a `session` token from a `device` this token must be included
+ * in all request `headers` as a `Bearer` token.
+ */
+export type Session = {
+  __typename?: 'Session';
+  /** Session expiration date in ISO 8601 format */
+  expiresAt?: Maybe<Scalars['String']['output']>;
+  /** reMakable Cloud API JWT device authentication token */
+  token?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -148,6 +173,7 @@ export type ResolversTypes = {
   DeviceDescription: DeviceDescription;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  Session: ResolverTypeWrapper<Session>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 };
 
@@ -158,6 +184,7 @@ export type ResolversParentTypes = {
   Device: Device;
   Mutation: {};
   Query: {};
+  Session: Session;
   String: Scalars['String']['output'];
 };
 
@@ -170,15 +197,23 @@ export type DeviceResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createDevice?: Resolver<Maybe<ResolversTypes['Device']>, ParentType, ContextType, RequireFields<MutationCreateDeviceArgs, 'input'>>;
+  createSession?: Resolver<Maybe<ResolversTypes['Session']>, ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 };
 
+export type SessionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Session'] = ResolversParentTypes['Session']> = {
+  expiresAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
   Device?: DeviceResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Session?: SessionResolvers<ContextType>;
 };
 

@@ -178,7 +178,7 @@
         "fields": [
           {
             "name": "createDevice",
-            "description": "Given a Device information and a `one-time` code, creates a new Device\nwith the given information and pairs it to the reMarkable Cloud account\nassociated with the `one-time` code.",
+            "description": "Given a Device information and a `one-time` code, creates a new `device`\nwith the given information and pairs it to the reMarkable Cloud account\nassociated with the `one-time` code.",
             "args": [
               {
                 "name": "input",
@@ -204,6 +204,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "createSession",
+            "description": "Creates new `device` session. Returns a `device` session token that\nmust be included in all request `headers` as a `Bearer` token.\n\nOnce expired, the `device` session token must be renewed to continue\ninteracting with the reMarkable Cloud API.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Session",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -219,6 +231,41 @@
           {
             "name": "hello",
             "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Session",
+        "description": "reMarkable Cloud API device session\n\nA `session` is a temporary JWT token associated to a reMarkable `device`, used for\ndevice authentication against the reMarkable Cloud API via bearer authentication.\n\nOnce you retrieve a `session` token from a `device` this token must be included\nin all request `headers` as a `Bearer` token.",
+        "fields": [
+          {
+            "name": "expiresAt",
+            "description": "Session expiration date in ISO 8601 format",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "token",
+            "description": "reMakable Cloud API JWT device authentication token",
             "args": [],
             "type": {
               "kind": "SCALAR",
